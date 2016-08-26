@@ -1,23 +1,22 @@
 #include "MemoryChallenge.h"
 
-// Jean Toole 280147790 Assignment 1
+//Jean Toole, 28147790 - FIT1048 Assignment 1, Part 2
 
 
-//TO DO: data validation, can't reuse coordinates, output to file for running leaderboard, add comments
+//TO DO: output to file for running leaderboard, add comments
 
 
 int main()
 {
-	
+	//main method variables
+	bool testMode, gameOver = false;
 	char gameBoard[36] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R' };
 	char visBoard[36];
 	char choice;
-	bool testMode;
-	bool gameOver = false;
 
 	srand(time(NULL));
 
-	//loops main menu following a win or [R]eturn to main menu
+	//loops main menu following a win or [R]eturn to main menu:
 	while (!gameOver)
 	{
 		random_shuffle(&gameBoard[0], &gameBoard[35]);		//random_shuffle swaps memory addresses of array elements
@@ -39,35 +38,35 @@ int main()
 		cout << "                                    __/ |                                    __/ |                   \n";
 		cout << "                                   |___/                                    |___/                    \n\nNow with Improved Graphics!!!\n\n[N]ew game, [T]est mode, or [Q]uit: ";
 		cin >> choice;
-		choice = tolower(choice);
+		choice = tolower(choice);							//converts char to lowercase, in case different case chars are entered.
 
 		if (choice == 'n')
 		{
-			playGame(testMode, visBoard, gameBoard);
+			playGame(testMode, visBoard, gameBoard);		//calls playgame function, parsing required variables
 			system("pause");
 		}
-
 		else if (choice == 't')
 		{
-			testMode = true;
-			playGame(testMode, visBoard, gameBoard);
+			testMode = true;								//enables test mode, revealing gameBoard above visBoard
+			playGame(testMode, visBoard, gameBoard);		//calls playgame function, parsing required variables
 			system("pause");
 		}
 		else if (choice == 'q')
 		{
-			return 0;
+			return 0;										//ends program with no errors
 		}
-		else
+		else                                                //message in case any other char is entered
 		{
 			cout << "You entered something else...\n\n";
 			system("pause");
 		}
 	}
 }
-
+//playGame function definition:
 void playGame(bool testMode, char visBoard[], char gameBoard[])
 {
-	string player1, player2, winner;
+	//local function variables
+	string player1, player2, winner, scoreName1, scoreName2;
 	int p1score = 0, p2score = 0;
 	int playerTurn;
 	int pairsFound = 0;
@@ -77,9 +76,11 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 
 	cout << "\nPlayer 1 name: ";
 	cin >> player1;
+	scoreName1 = player1;						//assigns player's name to scoreboard
 
 	cout << "\nPlayer 2 name: ";
 	cin >> player2;
+	scoreName2 = player2;						//assigns player's name to scoreboard
 
 	system("cls");
 
@@ -87,52 +88,47 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 	cout << "1. The 'Game Master' randomly decides who starts first\n\n";
 	cout << "2. Players take turns revealing 2 cards each,\n   by entering coordinates of the Game Board separated by a space for each card.\n";
 	cout << "   Choose the row coordinate first, then the column coordinate like this: 2 3  \n\n";
-	cout << "3. If a player scores a matching pair during their turn, they are awarded 1 point.\n\n";
+	cout << "3. If a player scores a matching pair during their turn, they are awarded 1 point, and get to choose again.\n\n";
 	cout << "4. Whoever gets the highest score after 18 pairs have been revealed is the Winner.\n\n";
 
 	system("pause");
 
-	playerTurn = rand() % 2 + 1;			//picks number between 0 and 1, + 1 (to make it 1 or 2)
+	playerTurn = rand() % 2 + 1;			//picks number between 0 and 1, + 1 (to make it 1 or 2) to decide who starts first
 	
-		
+	//win and matching pair conditions loop	
 	while (!win)
 	{
 		system("cls");
 
-		if (pairsFound > 17)
+		if (pairsFound > 17)				//ends !win loop
 		{
-			(win = true);
+			(win = true);					
 		}
-		
-		else if (playerTurn == 1)
+		else if (playerTurn == 1)			//alternates player to player1
 		{
-			isPair = player1Turn(testMode, player1, visBoard, gameBoard, p1score, p2score);
-			if (isPair)
+			isPair = playerRunTurn(testMode, player1, scoreName1, scoreName2, visBoard, gameBoard, p1score, p2score);
+			if (isPair)						//checks if matching pair boolean is returned from playerRunTurn function
 			{
-				p1score++;
-				pairsFound++;
-				
+				p1score++;					//increments player1's score
+				pairsFound++;				//increments the matching pairs counter
 			}
-
 			else
 			{
-				playerTurn++;
+				playerTurn++;				//increments the turn counter to switch players
 			}
 			
 		}
-		else if (playerTurn == 2)
+		else if (playerTurn == 2)			//alternates player to player2
 		{
-			isPair = player2Turn(testMode, player2, visBoard, gameBoard, p1score, p2score);
-			if (isPair)
+			isPair = playerRunTurn(testMode, player2, scoreName1, scoreName2, visBoard, gameBoard, p1score, p2score);
+			if (isPair)						//checks if matching pair boolean is returned from playerRunTurn function
 			{
-				p2score++;
-				pairsFound++;
-				
+				p2score++;					//increments player2's score
+				pairsFound++;				//increments the matching pairs counter
 			}
-			
 			else
 			{
-				playerTurn--;
+				playerTurn--;				//decrements the turn counter to switch players if no matching pair was found
 			}
 		}
 				
@@ -140,36 +136,33 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 	
 	system("cls");
 
-	if (p1score > p2score)
+	if (p1score > p2score)					//loop to determine which player won
 	{
 		winner = player1;
 	}
-
-	else if (p1score == p2score)
+	else if (p1score == p2score)			//in case there is a draw between players
 	{
 		winner = "TIE";
 		cout << "\n\n\OMG!!! CONGRATULATIONS " << player1 << " & " << player2 << " YOU TIED!!!\n\n\n";
 	}
-
 	else
 	{
-		winner = player2;
+		winner = player2;					//alternative scenario
 	}
 
-	if (winner != "TIE")
+	if (winner != "TIE")					//when not a draw
 	{
 		cout << "\n\nOMG!!! CONGRATULATIONS " << winner << " YOU WIN!!!\n\n\n";
 	}
-	
-	//system("pause");
 }
+//drawGameBoard function definition:
 void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 {
-	if (testMode == true)
+	if (testMode == true)					//test mode scenario
 	{
 		cout << "TEST MODE ACTIVE\n\n";
 		
-		//this function cuts the array into chunks of 6 and prints them in a grid
+		//this loop cuts the array into chunks of 6 and prints them in a grid
 		cout << "    0 1 2 3 4 5" << endl;
 
 		for (int i = 0; i < 6; i++)						//outer loop that prints the coordinates left of the board
@@ -177,14 +170,14 @@ void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 			cout << "  " << i << " ";					//prints number, then adds space for formatting
 			for (int j = 0; j < 6; j++)					//loops through block of 6 indexes of array
 			{
-				cout << gameBoard[j + (6 * i)] << " ";	//adds 6*i to index, to increment block of 6 elements in array
+				cout << gameBoard[j + (6 * i)] << " ";	//adds 6 * i to index, to increment block of 6 elements in array
 			}
 			cout << endl;
 		}
 		cout << endl << endl;
 	}
 	
-	//this function cuts the array into chunks of 6 and prints them in a grid
+	//this loop cuts the array into chunks of 6 and prints them in a grid
 	cout << "    0 1 2 3 4 5" << endl;
 	
 	for (int i = 0; i < 6; i++)							//outer loop that prints the coordinates left of the board
@@ -192,259 +185,111 @@ void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 		cout << "  " << i << " ";						//prints number, then adds space for formatting
 		for (int j = 0; j < 6; j++)						//loops through block of 6 indexes of array
 		{
-			cout << visBoard[j + (6 * i)] << " ";		//adds 6*i to index, to increment block of 6 elements in array
+			cout << visBoard[j + (6 * i)] << " ";		//adds 6 * i to index, to increment block of 6 elements in array
 		}
 		cout << endl;
 	}
 }
-
-bool player1Turn(bool testMode, string player1, char visBoard[], char gameBoard[], int p1score, int p2score)
+//playerRunTurn function definition:
+bool playerRunTurn(bool testMode, string name, string scoreName1, string scoreName2, char visBoard[], char gameBoard[], int p1score, int p2score)
 {
-	int coord1, coord2, coord3, coord4;
+	int coord1, coord2, coord3, coord4;					//local variables for guesses
 
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-
+	cout << "Player 1 Score: " << p1score << " (" << scoreName1 << ") \t\t\tPlayer 2 Score: " << p2score << " (" << scoreName2 << ")\n\n\n";
 	
-	bool validGuess = false;
+	drawGameBoard(testMode, visBoard, gameBoard);	//calls drawGameBoard function
+	
+	bool validGuess = false;						//sets validguess boolean
 
-	cout << "\n" << player1 << ", pick your first card (coordinates separated by a space): ";
+	cout << "\n" << name << ", pick your first card (coordinates separated by a space): ";
 
-	while (!validGuess)
+	while (!validGuess)								//loops while not a valid guess, for input validation
 	{
 		cin >> coord1 >> coord2;
-		if (cin.fail())
+		if (cin.fail())								//scenario when input doesn't match data type
 		{
-			cin.clear();
-			cin.ignore();
-			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+			cin.clear();							// resets fail flag
+			cin.ignore();							// flushes cin buffer
+			cout << "\nYou've entered an invalid character, must be numeric. Choose again: ";
 		}
 		else
 		{
-			if (visBoard[(coord1 * 6) + coord2] == ' ')
+			if (visBoard[(coord1 * 6) + coord2] != '~')		//scenario when used coords are selected
 			{
-				cout << "These coordinates have already been guessed. Choose again: ";
+				cout << "\nThese coordinates have already been guessed. Choose again: ";
 			}
-			else if ((coord1 < 0) || (coord2 < 0) || (coord1 > 5) || (coord2 > 5))
+			else if ((coord1 < 0) || (coord2 < 0) || (coord1 > 5) || (coord2 > 5))		//scenario when coords are out of bounds
 			{
-				cout << "These coordinates are out of bounds. Choose again: ";
+				cout << "\nThese coordinates are out of bounds. Choose again: ";
 			}
 			else
 			{
-				validGuess = true;
+				validGuess = true;							//determines guess to be valid
 			}
 		}
 	}
 	system("cls");
 
-	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];			//reveals charachters at matching indexes
+	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];			//reveals characters at matching indexes
 
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
+	cout << "Player 1 Score: " << p1score << " (" << scoreName1 << ") \t\t\tPlayer 2 Score: " << p2score << " (" << scoreName2 << ")\n\n\n";
 
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
+	drawGameBoard(testMode, visBoard, gameBoard);		//calls drawGameBoard function
 
-	validGuess = false;
+	validGuess = false;									//resets validguess boolean
 
-	cout << "\n" << player1 << ", pick your Second card (coordinates separated by a space): ";
+	cout << "\n" << name << ", pick your Second card (coordinates separated by a space): ";
 
-	while (!validGuess)
+	while (!validGuess)									//loops while not a valid guess, for input validation
 	{
 		cin >> coord3 >> coord4;
-		if (cin.fail())
+		if (cin.fail())									//scenario when input doesn't match data type
 		{
 			cin.clear();
 			cin.ignore();
-			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+			cout << "\nYou've entered an invalid character, must be numeric. Choose again: ";
 		}
 		else
 		{
-			if (visBoard[(coord3 * 6) + coord4] == ' ')
+			if (visBoard[(coord3 * 6) + coord4] != '~')		//scenario when used coords are selected
 			{
-				cout << "These coordinates have already been guessed. Choose again: ";
+				cout << "\nThese coordinates have already been guessed. Choose again: ";
 			}
-			else if ((coord3 < 0) || (coord4 < 0) || (coord3 > 5) || (coord4 > 5))
+			else if ((coord3 < 0) || (coord4 < 0) || (coord3 > 5) || (coord4 > 5))	//scenario when coords are out of bounds
 			{
-				cout << "These coordinates are out of bounds. Choose again: ";
+				cout << "\nThese coordinates are out of bounds. Choose again: ";
 			}
 			else
 			{
-				validGuess = true;
+				validGuess = true;							//determines guess to be valid
 			}
 		}
 	}
 	system("cls");
 
-	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];
+	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];	//reveals characters at matching indexes
 
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl; //\t inserts a tab
+	cout << "Player 1 Score: " << p1score << " (" << scoreName1 << ") \t\t\tPlayer 2 Score: " << p2score << " (" << scoreName2 << ")\n\n\n"; //\t inserts a tab
 
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
+	drawGameBoard(testMode, visBoard, gameBoard);			//calls drawGameBoard function
 
-	if (visBoard[(coord1 * 6) + coord2] == visBoard[(coord3 * 6) + coord4])
+	if (visBoard[(coord1 * 6) + coord2] == visBoard[(coord3 * 6) + coord4])		//comparison to determine matching chars
 	{
-		visBoard[(coord1 * 6) + coord2] = ' ';
-		visBoard[(coord3 * 6) + coord4] = ' ';
-		cout << "\nERMAGERD... " << player1 << " YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
+		visBoard[(coord1 * 6) + coord2] = ' ';				//sets matched pairs to blank
+		visBoard[(coord3 * 6) + coord4] = ' ';				//sets matched pairs to blank
+		cout << "\nERMAGERD!!! " << name << " YOU FOUND A MATCH! I CAN'T BELIEVE IT!\n";
 		system("pause");
 		return true;
 	}
-
 	else
 	{
-		cout << "\nSorry " << player1 << ", the cards didn't match.\n";
-		visBoard[(coord1 * 6) + coord2] = '~';
-		visBoard[(coord3 * 6) + coord4] = '~';
+		cout << "\nSorry " << name << ", the cards didn't match.\n";
+		visBoard[(coord1 * 6) + coord2] = '~';				//resets coords to ~ if not a match
+		visBoard[(coord3 * 6) + coord4] = '~';				//resets coords to ~ if not a match
 		system("pause");
 		return false;
-
 	}
 
-
-	
 }
 
-bool player2Turn(bool testMode, string player2, char visBoard[], char gameBoard[], int p1score, int p2score)
-{
-	int coord1, coord2, coord3, coord4;
 
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
-
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-
-
-	bool validGuess = false;
-
-	cout << "\n" << player2 << ", pick your first card (coordinates separated by a space): ";
-	
-	while (!validGuess)
-	{
-		cin >> coord1 >> coord2;
-		if (cin.fail())
-		{
-			cin.clear();
-			cin.ignore();
-			cout << "You've entered an invalid character, must be numeric. Choose again: ";
-		}
-		else
-		{
-			if (visBoard[(coord1 * 6) + coord2] == ' ')
-			{
-				cout << "These coordinates have already been guessed. Choose again: ";
-			}
-			else if ((coord1 < 0) || (coord2 < 0) || (coord1 > 5) || (coord2 > 5))
-			{
-				cout << "These coordinates are out of bounds. Choose again: ";
-			}
-			else
-			{
-				validGuess = true;
-			}
-		}
-	}
-
-	system("cls");
-
-	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];
-
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
-
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-
-	validGuess = false;
-
-	cout << "\n" << player2 << ", pick your second card (coordinates separated by a space): ";
-
-	while (!validGuess)
-	{
-		cin >> coord3 >> coord4;
-		if (cin.fail())
-		{
-			cin.clear();
-			cin.ignore();
-			cout << "You've entered an invalid character, must be numeric. Choose again: ";
-		}
-		else
-		{
-			if (visBoard[(coord3 * 6) + coord4] == ' ')
-			{
-				cout << "These coordinates have already been guessed. Choose again: ";
-			}
-			else if ((coord3 < 0) || (coord4 < 0) || (coord3 > 5) || (coord4 > 5))
-			{
-				cout << "These coordinates are out of bounds. Choose again: ";
-			}
-			else
-			{
-				validGuess = true;
-			}
-		}
-	}
-	system("cls");
-
-	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];
-
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
-
-	if (testMode)
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-	else
-	{
-		drawGameBoard(testMode, visBoard, gameBoard);
-	}
-
-	if (visBoard[(coord1 * 6) + coord2] == visBoard[(coord3 * 6) + coord4])
-	{
-		visBoard[(coord1 * 6) + coord2] = ' ';
-		visBoard[(coord3 * 6) + coord4] = ' ';
-		cout << "ERMAGERD.. " << player2 << " YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
-		system("pause");
-		return true;
-	}
-
-	else
-	{
-		cout << "\nSorry " << player2 << ", the cards didn't match.\n";
-		visBoard[(coord1 * 6) + coord2] = '~';
-		visBoard[(coord3 * 6) + coord4] = '~';
-		system("pause");
-		return false;
-
-	}
-}

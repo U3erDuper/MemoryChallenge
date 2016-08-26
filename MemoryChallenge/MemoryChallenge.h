@@ -2,20 +2,20 @@
 #define MEM_H
 
 #include <iostream>
-#include <algorithm>
+#include <algorithm>					//required for random_shuffle function
 #include <string>
-#include <ctime>
-#include <vector>
+#include <ctime>						//required to initialise srand function
+
 
 using namespace std;
+
+//custom function declarations, and required data types:
 
 void playGame(bool, char[], char[]);
 
 void drawGameBoard(bool, char[], char[]);
 
-bool player1Turn(bool, string, char[], char[], int, int);
-
-bool player2Turn(bool, string, char[], char[], int, int);
+bool playerRunTurn(bool, string, string, string, char[], char[], int, int);
 
 
 #endif
