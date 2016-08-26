@@ -3,7 +3,7 @@
 // Jean Toole 280147790 Assignment 1
 
 
-//TO DO: code an end condition, data validation, can't reuse coordinates, output to file for running leaderboard, add comments
+//TO DO: data validation, can't reuse coordinates, output to file for running leaderboard, add comments
 
 
 int main()
@@ -67,9 +67,8 @@ int main()
 
 void playGame(bool testMode, char visBoard[], char gameBoard[])
 {
-	string player1, player2;
+	string player1, player2, winner;
 	int p1score = 0, p2score = 0;
-	
 	int playerTurn;
 	int pairsFound = 0;
 	bool isPair = false;
@@ -100,7 +99,12 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 	{
 		system("cls");
 
-		if (playerTurn == 1)
+		if (pairsFound > 17)
+		{
+			(win = true);
+		}
+		
+		else if (playerTurn == 1)
 		{
 			isPair = player1Turn(testMode, player1, visBoard, gameBoard, p1score, p2score);
 			if (isPair)
@@ -134,6 +138,30 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 				
 	}
 	
+	system("cls");
+
+	if (p1score > p2score)
+	{
+		winner = player1;
+	}
+
+	else if (p1score == p2score)
+	{
+		winner = "TIE";
+		cout << "\n\n\OMG!!! CONGRATULATIONS " << player1 << " & " << player2 << " YOU TIED!!!\n\n\n";
+	}
+
+	else
+	{
+		winner = player2;
+	}
+
+	if (winner != "TIE")
+	{
+		cout << "\n\nOMG!!! CONGRATULATIONS " << winner << " YOU WIN!!!\n\n\n";
+	}
+	
+	//system("pause");
 }
 void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 {
@@ -185,12 +213,38 @@ bool player1Turn(bool testMode, string player1, char visBoard[], char gameBoard[
 	}
 
 	
-	cout << "\n" << player1 << ", pick your first card: ";
+	bool validGuess = false;
 
-	cin >> coord1 >> coord2;
+	cout << "\n" << player1 << ", pick your first card (coordinates separated by a space): ";
+
+	while (!validGuess)
+	{
+		cin >> coord1 >> coord2;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+		}
+		else
+		{
+			if (visBoard[(coord1 * 6) + coord2] == ' ')
+			{
+				cout << "These coordinates have already been guessed. Choose again: ";
+			}
+			else if ((coord1 < 0) || (coord2 < 0) || (coord1 > 5) || (coord2 > 5))
+			{
+				cout << "These coordinates are out of bounds. Choose again: ";
+			}
+			else
+			{
+				validGuess = true;
+			}
+		}
+	}
 	system("cls");
 
-	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];
+	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];			//reveals charachters at matching indexes
 
 	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
 
@@ -203,9 +257,35 @@ bool player1Turn(bool testMode, string player1, char visBoard[], char gameBoard[
 		drawGameBoard(testMode, visBoard, gameBoard);
 	}
 
-	cout << "\n" << player1 << ", pick your second card: ";
+	validGuess = false;
 
-	cin >> coord3 >> coord4;
+	cout << "\n" << player1 << ", pick your Second card (coordinates separated by a space): ";
+
+	while (!validGuess)
+	{
+		cin >> coord3 >> coord4;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+		}
+		else
+		{
+			if (visBoard[(coord3 * 6) + coord4] == ' ')
+			{
+				cout << "These coordinates have already been guessed. Choose again: ";
+			}
+			else if ((coord3 < 0) || (coord4 < 0) || (coord3 > 5) || (coord4 > 5))
+			{
+				cout << "These coordinates are out of bounds. Choose again: ";
+			}
+			else
+			{
+				validGuess = true;
+			}
+		}
+	}
 	system("cls");
 
 	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];
@@ -260,9 +340,36 @@ bool player2Turn(bool testMode, string player2, char visBoard[], char gameBoard[
 	}
 
 
-	cout << "\n" << player2 << ", pick your first card: ";
+	bool validGuess = false;
 
-	cin >> coord1 >> coord2;
+	cout << "\n" << player2 << ", pick your first card (coordinates separated by a space): ";
+	
+	while (!validGuess)
+	{
+		cin >> coord1 >> coord2;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+		}
+		else
+		{
+			if (visBoard[(coord1 * 6) + coord2] == ' ')
+			{
+				cout << "These coordinates have already been guessed. Choose again: ";
+			}
+			else if ((coord1 < 0) || (coord2 < 0) || (coord1 > 5) || (coord2 > 5))
+			{
+				cout << "These coordinates are out of bounds. Choose again: ";
+			}
+			else
+			{
+				validGuess = true;
+			}
+		}
+	}
+
 	system("cls");
 
 	visBoard[(coord1 * 6) + coord2] = gameBoard[(coord1 * 6) + coord2];
@@ -278,9 +385,35 @@ bool player2Turn(bool testMode, string player2, char visBoard[], char gameBoard[
 		drawGameBoard(testMode, visBoard, gameBoard);
 	}
 
-	cout << "\n" << player2 << ", pick your second card: ";
+	validGuess = false;
 
-	cin >> coord3 >> coord4;
+	cout << "\n" << player2 << ", pick your second card (coordinates separated by a space): ";
+
+	while (!validGuess)
+	{
+		cin >> coord3 >> coord4;
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+			cout << "You've entered an invalid character, must be numeric. Choose again: ";
+		}
+		else
+		{
+			if (visBoard[(coord3 * 6) + coord4] == ' ')
+			{
+				cout << "These coordinates have already been guessed. Choose again: ";
+			}
+			else if ((coord3 < 0) || (coord4 < 0) || (coord3 > 5) || (coord4 > 5))
+			{
+				cout << "These coordinates are out of bounds. Choose again: ";
+			}
+			else
+			{
+				validGuess = true;
+			}
+		}
+	}
 	system("cls");
 
 	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];
