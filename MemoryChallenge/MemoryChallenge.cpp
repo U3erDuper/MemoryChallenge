@@ -26,9 +26,18 @@ int main()
 		{
 			visBoard[i] = '~';
 		}
+
 		testMode = false;									//resets testMode boolean to false at commencement of while loop
 		system("cls");
-		cout << "Welcome to Memory Challenge 3D\nNow with Improved Graphics!!!\n\n[N]ew game, [T]est mode, or [Q]uit: ";
+		cout << "Welcome to\n";
+		cout << " ___  ___                                  _____ _           _ _                         ___________\n";
+		cout << " |  \\/  |                                 /  __ \\ |         | | |                       |____ |  _  \\\n";
+		cout << " | .  . | ___ _ __ ___   ___  _ __ _   _  | /  \\/ |__   __ _| | | ___ _ __   __ _  ___      / / | | |\n";
+		cout << " | |\\/| |/ _ \\ '_ ` _ \\ / _ \\| '__| | | | | |   | '_ \\ / _` | | |/ _ \\ '_ \\ / _` |/ _ \\     \\ \\ | | |\n";
+		cout << " | |  | |  __/ | | | | | (_) | |  | |_| | | \\__/\\ | | | (_| | | |  __/ | | | (_| |  __/ .___/ / |/ / \n";
+		cout << " \\_|  |_/\\___|_| |_| |_|\\___/|_|   \\__, |  \\____/_| |_|\\__,_|_|_|\\___|_| |_|\\__, |\\___| \\____/|___/  \n";
+		cout << "                                    __/ |                                    __/ |                   \n";
+		cout << "                                   |___/                                    |___/                    \n\nNow with Improved Graphics!!!\n\n[N]ew game, [T]est mode, or [Q]uit: ";
 		cin >> choice;
 		choice = tolower(choice);
 
@@ -100,7 +109,12 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 				pairsFound++;
 				
 			}
-			playerTurn++;
+
+			else
+			{
+				playerTurn++;
+			}
+			
 		}
 		else if (playerTurn == 2)
 		{
@@ -111,7 +125,11 @@ void playGame(bool testMode, char visBoard[], char gameBoard[])
 				pairsFound++;
 				
 			}
-			playerTurn--;
+			
+			else
+			{
+				playerTurn--;
+			}
 		}
 				
 	}
@@ -128,7 +146,7 @@ void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 
 		for (int i = 0; i < 6; i++)						//outer loop that prints the coordinates left of the board
 		{
-			cout << "  " << i << " ";							//prints number, then adds space for formatting
+			cout << "  " << i << " ";					//prints number, then adds space for formatting
 			for (int j = 0; j < 6; j++)					//loops through block of 6 indexes of array
 			{
 				cout << gameBoard[j + (6 * i)] << " ";	//adds 6*i to index, to increment block of 6 elements in array
@@ -141,12 +159,12 @@ void drawGameBoard(bool testMode, char visBoard[], char gameBoard[])
 	//this function cuts the array into chunks of 6 and prints them in a grid
 	cout << "    0 1 2 3 4 5" << endl;
 	
-	for (int i = 0; i < 6; i++)						//outer loop that prints the coordinates left of the board
+	for (int i = 0; i < 6; i++)							//outer loop that prints the coordinates left of the board
 	{
-		cout << "  " << i << " ";							//prints number, then adds space for formatting
-		for (int j = 0; j < 6; j++)					//loops through block of 6 indexes of array
+		cout << "  " << i << " ";						//prints number, then adds space for formatting
+		for (int j = 0; j < 6; j++)						//loops through block of 6 indexes of array
 		{
-			cout << visBoard[j + (6 * i)] << " ";	//adds 6*i to index, to increment block of 6 elements in array
+			cout << visBoard[j + (6 * i)] << " ";		//adds 6*i to index, to increment block of 6 elements in array
 		}
 		cout << endl;
 	}
@@ -192,7 +210,7 @@ bool player1Turn(bool testMode, string player1, char visBoard[], char gameBoard[
 
 	visBoard[(coord3 * 6) + coord4] = gameBoard[(coord3 * 6) + coord4];
 
-	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl;
+	cout << "Player 1 Score: " << p1score << "\t\t\t\tPlayer 2 Score: " << p2score << endl << endl; //\t inserts a tab
 
 	if (testMode)
 	{
@@ -207,14 +225,14 @@ bool player1Turn(bool testMode, string player1, char visBoard[], char gameBoard[
 	{
 		visBoard[(coord1 * 6) + coord2] = ' ';
 		visBoard[(coord3 * 6) + coord4] = ' ';
-		cout << "\nERMAGERD YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
+		cout << "\nERMAGERD... " << player1 << " YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
 		system("pause");
 		return true;
 	}
 
 	else
 	{
-		cout << "Sorry " << player1 << ", the cards didn't match...";
+		cout << "\nSorry " << player1 << ", the cards didn't match.\n";
 		visBoard[(coord1 * 6) + coord2] = '~';
 		visBoard[(coord3 * 6) + coord4] = '~';
 		system("pause");
@@ -282,14 +300,14 @@ bool player2Turn(bool testMode, string player2, char visBoard[], char gameBoard[
 	{
 		visBoard[(coord1 * 6) + coord2] = ' ';
 		visBoard[(coord3 * 6) + coord4] = ' ';
-		cout << "ERMAGERD YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
+		cout << "ERMAGERD.. " << player2 << " YOU FOUND A MATCH! I CAN'T BELIEVE IT!\nThe computer will shut down now, it has had too much excitement for one day.\n";
 		system("pause");
 		return true;
 	}
 
 	else
 	{
-		cout << "Sorry " << player2 << ", the cards didn't match...";
+		cout << "\nSorry " << player2 << ", the cards didn't match.\n";
 		visBoard[(coord1 * 6) + coord2] = '~';
 		visBoard[(coord3 * 6) + coord4] = '~';
 		system("pause");
